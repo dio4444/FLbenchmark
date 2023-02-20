@@ -53,12 +53,14 @@ def output(num, unit):
         # 第一次初始化
         interfaces, _, _ = get_network_data()
         currTime = datetime.now()
-        timeStr = datetime.strftime(currTime, "%Y-%m-%d %H:%M:%S")
-        stdscr.addstr(0, 0, timeStr)
+        timeStr = datetime.strftime(currTime, "%Y-%m-%d %H:%M:%S")  # 格式化时间，返回以可读字符串表示的当地时间
+        stdscr.addstr(0, 0, timeStr)  # addstr(y,x,str)移动到窗口内的 y,x 位置，并显示 str
         i = 1
         for interface in interfaces:
             if interface != "lo" and bool(1 - interface.startswith("veth")) and bool(
                     1 - interface.startswith("蓝牙")) and bool(1 - interface.startswith("VMware")):
+                # 筛选掉'lo'、'veth'、'蓝牙'、'VMware'开头的接口
+                # 根据命令行参数，更改单位，默认B/s
                 if unit == "K" or unit == "k":
                     netIn = "%12.2fKB/s" % 0
                     netOut = "%11.2fKB/s" % 0
@@ -76,7 +78,15 @@ def output(num, unit):
                 stdscr.addstr(i + 2, 0, "Output:%s" % netOut)
                 stdscr.move(i + 3, 0)
                 i += 4
-                stdscr.refresh()
+                # stdscr.refresh()  # 更新屏幕显示结果
+        cpu, memory, total, free = get_ecs_cpu_and_memory()
+        stdscr.addstr(i, 0, 'cpu:%s' % cpu)
+        stdscr.addstr(i+1, 0, 'memory:%s' % memory)
+        stdscr.addstr(i+2, 0, 'total:%s GB' % total)
+        stdscr.addstr(i+3, 0, 'free:%s GB' % free)
+        stdscr.move(i + 4, 0)
+        i += 5
+        stdscr.refresh()
         # 第二次开始循环监控网卡流量
         while True:
             _, networkIn, networkOut = get_network_rate(num)
@@ -105,7 +115,15 @@ def output(num, unit):
                     stdscr.addstr(i + 2, 0, "Output:%s" % netOut)
                     stdscr.move(i + 3, 0)
                     i += 4
-                    stdscr.refresh()
+                    # stdscr.refresh()
+            cpu, memory, total, free = get_ecs_cpu_and_memory()
+            stdscr.addstr(i, 0, 'cpu:%s' % cpu)
+            stdscr.addstr(i + 1, 0, 'memory:%s' % memory)
+            stdscr.addstr(i + 2, 0, 'total:%s GB' % total)
+            stdscr.addstr(i + 3, 0, 'free:%s GB' % free)
+            stdscr.move(i + 4, 0)
+            i += 5
+            stdscr.refresh()
     except KeyboardInterrupt:
         # 还原终端
         curses.echo()
@@ -142,12 +160,6 @@ def get_process_info(pid):
 
 
 if __name__ == "__main__":
-    cpu, memory, total, free = get_ecs_cpu_and_memory()
-    print('cpu', cpu)
-    print('memory', memory)
-    print('total: {} GB'.format(total))
-    print('free: {} GB'.format(free))
-
     parser = argparse.ArgumentParser(
         description="A command for monitoring the traffic of network interface! Ctrl + C: exit")
     parser.add_argument("-t", "--time", type=int, help="the interval time for ouput", default=1)
