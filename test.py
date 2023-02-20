@@ -24,3 +24,32 @@ import os
 #     data=json.load(f)
 #     print(data)
 #     print(data['data']['url'])
+# import psutil
+# import argparse
+#
+#
+# def get_process_info(pid):
+#     print(pid)
+#
+#
+# parser = argparse.ArgumentParser(description='Show process information')
+# parser.add_argument('--pid', '-p', help='pid', required=True)
+# args = parser.parse_args()
+#
+# if __name__ == '__main__':
+#     try:
+#         get_process_info(args.pid)
+#     except Exception as e:
+#         print(e)
+
+import psutil
+
+recv = {}
+sent = {}
+data = psutil.net_io_counters(pernic=True)  # 获取网络读写字节／包的个数
+interfaces = data.keys()
+for interface in interfaces:
+    recv.setdefault(interface, data.get(interface).bytes_recv)
+    sent.setdefault(interface, data.get(interface).bytes_sent)
+
+print(recv, sent)

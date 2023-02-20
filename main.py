@@ -50,3 +50,5 @@ def fate_model_evaluate(dsl: str, conf: str):
     return json.load(log)['data']['board_url']
 
 
+def paddle_data_format():
+

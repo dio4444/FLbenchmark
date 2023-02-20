@@ -20,7 +20,7 @@ def get_network_data():
     # 获取网卡流量信息
     recv = {}
     sent = {}
-    data = psutil.net_io_counters(pernic=True)
+    data = psutil.net_io_counters(pernic=True)  # 获取网络读写字节／包的个数
     interfaces = data.keys()
     for interface in interfaces:
         recv.setdefault(interface, data.get(interface).bytes_recv)
@@ -31,7 +31,7 @@ def get_network_data():
 def get_network_rate(num):
     # 计算网卡流量速率
     interfaces, oldRecv, oldSent = get_network_data()
-    time.sleep(num)
+    time.sleep(num)  # 推迟执行的秒数
     interfaces, newRecv, newSent = get_network_data()
     networkIn = {}
     networkOut = {}
@@ -121,6 +121,24 @@ def output(num, unit):
         curses.echo()
         curses.nocbreak()
         curses.endwin()
+
+
+def get_process_info(pid):
+    p = psutil.Process(pid)
+    print(p.name())  # 进程名
+    # p.exe()  # 进程的bin路径
+    # p.cwd()  # 进程的工作目录绝对路径
+    p.status()  # 进程状态
+    p.create_time()  # 进程创建时间
+    p.uids()  # 进程uid信息
+    p.gids()  # 进程的gid信息
+    p.cpu_times()  # 进程的cpu时间信息,包括user,system两个cpu信息
+    # p.cpu_affinity()  # get进程cpu亲和度,如果要设置cpu亲和度,将cpu号作为参考就好
+    p.memory_percent()  # 进程内存利用率
+    p.memory_info()  # 进程内存rss,vms信息
+    p.io_counters()  # 进程的IO信息,包括读写IO数字及参数
+    # p.connectios()  # 返回进程列表
+    p.num_threads()  # 进程开启的线程数
 
 
 if __name__ == "__main__":
