@@ -6,9 +6,9 @@ def fate_data_format(fate_dir: str, file: str, table_name: str, namespace: str, 
     """
     :param fate_dir: fate安装目录
     :param file: 指定数据文件
-    :param head:
-    :param partition:
-    :param work_mode:
+    :param head: 指定数据文件是否包含表头，默认'1'有
+    :param partition: 指定用于存储数据的分区数，默认'16'
+    :param work_mode: 指定工作模式，默认'0'单机版
     :param table_name: 指定DTable表名
     :param namespace: 指定DTable表名的命名空间
     :return: 日志信息
@@ -49,6 +49,4 @@ def fate_model_evaluate(dsl: str, conf: str):
     log = os.popen(f'python $fata_dir/fate_flow/fate_flow_client.py -f submit_job -d {dsl} -c {conf}')
     return json.load(log)['data']['board_url']
 
-
-def paddle_data_format():
 
