@@ -2,6 +2,7 @@ import os
 
 
 class FateBench:
+    # init, conf_dsl_，bash_cre, exec
     def __init__(self, mode, data, name):
         self.mode = mode
         self.data = data
@@ -42,11 +43,18 @@ class FateBench:
                     '-f submit_job -c ${name}_conf.json -d ${name}_dsl.json"')
 
     def exec(self):
-        # 不进入容器，直接调用bash脚本运行后续操作
+        # 不进入容器，执行bash脚本
         os.system(f'bash {self.name}/{self.name}.bash && bash {self.name}/{self.name}_upload.bash '
                   f'&& {self.name}/{self.name}_submit_job.bash')
 
     def conf_dsl_(self):
+        # 根据mode选择v1里的DSL和conf配置文件，然后重写在self.name文件夹下
+        match self.mode:
+            case 'homo_logistic_regression':
+                
+
+
+
 
         os.system(f'mkdir -p {self.name}')
         os.system(f'cp -i upload.json {self.name}/{self.name}_upload.json')

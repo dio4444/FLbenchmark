@@ -3,6 +3,7 @@ import json
 from typing import List
 import os, sys
 
+
 # json.load()从json文件中读取数据
 #
 # json.loads()将str类型的数据转换为dict类型
@@ -12,35 +13,50 @@ import os, sys
 # json.dump()将数据以json的数据类型写入文件中
 
 
-class JsonPathFinder:
-    def __init__(self, json_str):
-        self.data = json.loads(json_str)
-
-    def iter_node(self, rows, road_step, target):
-        if isinstance(rows, dict):
-            key_value_iter = (x for x in rows.items())
-        elif isinstance(rows, list):
-            key_value_iter = (x for x in enumerate(rows))
-        else:
-            return
-        for key, value in key_value_iter:
-            current_path = road_step.copy()
-            current_path.append(key)
-            if key == target:
-                yield current_path
-            if isinstance(value, (dict, list)):
-                yield from self.iter_node(value, current_path, target)
-
-    def find_one(self, key: str) -> list:
-        path_iter = self.iter_node(self.data, [], key)
-        for path in path_iter:
-            return path
-        return []
-
-    def find_all(self, key) -> List[list]:
-        path_iter = self.iter_node(self.data, [], key)
-        return list(path_iter)
-
+# class JsonPathFinder:
+#     def __init__(self, json_str):
+#         self.data = json.loads(json_str)
+#
+#     def iter_node(self, rows, road_step, target):
+#         if isinstance(rows, dict):
+#             key_value_iter = (x for x in rows.items())
+#         elif isinstance(rows, list):
+#             key_value_iter = (x for x in enumerate(rows))
+#         else:
+#             return
+#         for key, value in key_value_iter:
+#             current_path = road_step.copy()
+#             current_path.append(key)
+#             if key == target:
+#                 yield current_path
+#             if isinstance(value, (dict, list)):
+#                 yield from self.iter_node(value, current_path, target)
+#
+#     def find_one(self, key: str) -> list:
+#         path_iter = self.iter_node(self.data, [], key)
+#         for path in path_iter:
+#             return path
+#         return []
+#
+#     def find_all(self, key) -> List[list]:
+#         path_iter = self.iter_node(self.data, [], key)
+#         return list(path_iter)
+#
+#
+# if __name__ == '__main__':
+#     with open('upload_data.json') as f:
+#         json_data = f.read()
+#         print(type(json.load(f)))
+#     print(json.loads(json_data))
+#     finder = JsonPathFinder(json_data)
+#     path_list = finder.find_all('id')
+#     data = finder.data
+#     for path in path_list:
+#         content = data.copy()
+#         for step in path:
+#             content = content[step]
+#         print('>>>>', content)
+#
 
 class FateBench:
     def __init__(self, dsl, conf, mode, data):
@@ -63,25 +79,8 @@ class FateBench:
                 os.system(f'python /fate/python/fate_flow/fate_flow_client.py -f submit_job -d {self.dsl} '
                           f'-c {self.conf}')
 
-
-def dsl_conf_():
-    with open() as ff:
-        ff
-
-
-if __name__ == '__main__':
-    with open('upload_data.json')as f:
-        json_data = f.read()
-        print(type(json.load(f)))
-    print(json.loads(json_data))
-    finder = JsonPathFinder(json_data)
-    path_list = finder.find_all('id')
-    data = finder.data
-    for path in path_list:
-        content = data.copy()
-        for step in path:
-            content = content[step]
-        print('>>>>', content)
+    def upload_json(self, ):
+        os.system(f'cp upload.yaml')
 
 
 # def dsl_conf_(file_name, key, value):
